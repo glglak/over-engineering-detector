@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: '18' # Use the appropriate version for your React app
 
+          
+      - name: Lint and Fix
+        run: npm run lint -- --fix
       # Step 3: Install and build React app
       - name: Install and Build React App
         working-directory: .
