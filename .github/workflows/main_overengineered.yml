@@ -29,13 +29,10 @@ jobs:
         run: npm install
 
       # Step 4: Build and Export React/Next.js App
-      - name: Build Frontend and Export
+      - name: Build Frontend
         working-directory: .
         run: |
-          export NEXT_PUBLIC_ESLINT_DISABLE=true
-          export NEXT_PUBLIC_DISABLE_TYPE_CHECKING=true
           npm run build
-          npm run export
 
       # Step 5: Deploy Frontend to GitHub Pages
       - name: Deploy to GitHub Pages

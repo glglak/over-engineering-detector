@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+const nextConfig = {
   output: 'export',
   images: {
-    unoptimized: true, // GitHub Pages does not support image optimization
+    unoptimized: true, // Required for GitHub Pages or any static export without image optimization
   },
 };
+
+module.exports = nextConfig;
