@@ -162,7 +162,7 @@ const ProjectAnalyzer = () => {
         <Brain className="h-8 w-8 text-indigo-300" />
         <div>
           <div className="text-indigo-300 text-sm font-medium">ARCHITECT&apos;S Roast Line</div>
-          <div className="text-xl font-bold italic">"{roastingTip}"</div>
+          <div className="text-xl font-bold italic">&quot;{roastingTip}&quot;</div>
         </div>
       </div>
     </div>
