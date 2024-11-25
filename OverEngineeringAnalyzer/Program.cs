@@ -18,35 +18,7 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables()
     .AddJsonFile(".env.json", optional: true);
-var configFiles = new[] {
-    Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"),
-    Path.Combine(Directory.GetCurrentDirectory(), $"appsettings.{builder.Environment.EnvironmentName}.json"),
-    Path.Combine(Directory.GetCurrentDirectory(), ".env.json")
-};
-// After configuration setup
-Console.WriteLine("\nContent of configuration files:");
-
-// Read and display appsettings.json
-Console.WriteLine("\nappsettings.json content:");
-var appSettings = File.ReadAllText("appsettings.json");
-Console.WriteLine(appSettings);
-
-// Read and display appsettings.Development.json
-Console.WriteLine("\nappsettings.Development.json content:");
-var devSettings = File.ReadAllText("appsettings.Development.json");
-Console.WriteLine(devSettings);
-
-// Read and display .env.json
-Console.WriteLine("\n.env.json content:");
-var envSettings = File.ReadAllText(".env.json");
-Console.WriteLine(envSettings);
-
-// Display all configuration values
-Console.WriteLine("\nAll Configuration Values:");
-foreach (var conf in builder.Configuration.AsEnumerable())
-{
-    Console.WriteLine($"{conf.Key} = {conf.Value}");
-}
+ 
 // Configure CORS with environment variables
 builder.Services.AddCors(options =>
 {
@@ -65,14 +37,20 @@ builder.Services.AddCors(options =>
 // Configure OpenAI settings
 builder.Services.Configure<OpenAIConfig>(options =>
 {
-      options.ApiKey = builder.Configuration["OpenAI:ApiKey"] ?? 
+     options.OpenAI_ApiKey = builder.Configuration["OpenAI_ApiKey"] ?? builder.Configuration["OpenAI:ApiKey"] ?? 
         throw new InvalidOperationException("OpenAI API Key not configured");
-    options.DeploymentName = builder.Configuration["OpenAI:DeploymentName"] ?? 
+    options.OpenAI_DeploymentName = builder.Configuration["OpenAI_DeploymentName"] ?? builder.Configuration["OpenAI:DeploymentName"] ?? 
         throw new InvalidOperationException("OpenAI Deployment Name not configured");
-    options.ApiVersion = builder.Configuration["OpenAI:ApiVersion"] ?? 
+    options.OpenAI_ApiVersion = builder.Configuration["OpenAI_ApiVersion"] ?? builder.Configuration["OpenAI:ApiVersion"] ?? 
         throw new InvalidOperationException("OpenAI API Version not configured");
-    options.Endpoint = builder.Configuration["OpenAI:Endpoint"] ?? 
+    options.OpenAI_Endpoint = builder.Configuration["OpenAI_Endpoint"] ?? builder.Configuration["OpenAI:Endpoint"] ?? 
         throw new InvalidOperationException("Azure OpenAI Endpoint not configured");
+
+    // Map the Azure App Service setting names to the properties used in the rest of the app
+    options.ApiKey = options.OpenAI_ApiKey;
+    options.DeploymentName = options.OpenAI_DeploymentName;
+    options.ApiVersion = options.OpenAI_ApiVersion;
+    options.Endpoint = options.OpenAI_Endpoint;
 });
 
 // Register services
