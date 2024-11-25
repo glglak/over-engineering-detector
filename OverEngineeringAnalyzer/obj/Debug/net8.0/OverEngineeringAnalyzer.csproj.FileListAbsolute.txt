@@ -211,3 +211,4 @@ C:\Users\karim.deraz\source\repos\over-engineering-detector\OverEngineeringAnaly
 C:\Users\karim.deraz\source\repos\over-engineering-detector\OverEngineeringAnalyzer\bin\Debug\net8.0\.env.json
 C:\Users\karim.deraz\source\repos\over-engineering-detector\OverEngineeringAnalyzer\bin\Debug\net8.0\DotNetEnv.dll
 C:\Users\karim.deraz\source\repos\over-engineering-detector\OverEngineeringAnalyzer\bin\Debug\net8.0\Sprache.dll
+C:\Users\karim.deraz\source\repos\over-engineering-detector\OverEngineeringAnalyzer\obj\Debug\net8.0\OverEngineeringAnalyzer.sourcelink.json
