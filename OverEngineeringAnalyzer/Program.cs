@@ -56,7 +56,12 @@ builder.Services.Configure<OpenAIConfig>(options =>
 // Register services
 builder.Services.AddHttpClient();
  
-MSBuildLocator.RegisterDefaults();
+
+if (Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID") == null)
+{
+    // WEBSITE_INSTANCE_ID is only set in Azure App Service
+    MSBuildLocator.RegisterDefaults();
+}
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
