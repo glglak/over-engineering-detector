@@ -88,13 +88,13 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build and Publish Backend
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy-backend:
     runs-on: ubuntu-latest
