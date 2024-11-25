@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OverEngineering Detector
+
+Analyze project structures for architecture patterns, anti-patterns, and adherence to best practices. This tool combines a **React** frontend and a **.NET Core** backend deployed on **GitHub Pages** and **Azure App Service**.
+
+## Project Overview
+
+- **Frontend**: Built with React, deployed to GitHub Pages.
+- **Backend**: .NET Core API leveraging Azure OpenAI, deployed on Azure App Service.
+
+### Live Demo
+
+- **Frontend**: [OverEngineering Detector GitHub Pages](https://glglak.github.io/over-engineering-detector/)
+- **Backend API**: Hosted on Azure App Service.
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Frontend
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Navigate to the [frontend repository](https://glglak.github.io/over-engineering-detector/).
+2. Interact with the application by uploading project structures for analysis.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. API is deployed on Azure App Service and processes requests from the frontend.
+2. Example Endpoint:
+   - `POST /api/analyzer/analyze`: Accepts project structures and returns metrics.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Deployment Instructions
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Deploy to GitHub Pages**:
+   - Run `npm run build` to build the React app.
+   - Deploy using GitHub Actions or `gh-pages`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Live URL**:
+   - Update `NEXT_PUBLIC_API_URL` to point to the backend API.
 
-## Deploy on Vercel
+### Backend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Deploy to Azure App Service**:
+   - Publish the .NET project using:
+     ```bash
+     dotnet publish -c Release
+     ```
+   - Deploy the published files to Azure App Service.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Configuration**:
+   - Add the following App Settings in Azure:
+     - `OpenAI_ApiKey`
+     - `OpenAI_DeploymentName`
+     - `OpenAI_ApiVersion`
+     - `OpenAI_Endpoint`
+
+---
+
+## Features
+
+- **Architecture Analysis**:
+  - Detects patterns like Clean, Onion, or Microservices.
+- **Anti-Patterns**:
+  - Identifies overengineering and SOLID violations.
+- **Metrics**:
+  - Comprehensive insights into directory structure and file types.
+
+---
+
+## Technologies
+
+- **Frontend**: React, TailwindCSS.
+- **Backend**: .NET Core, Azure OpenAI, Swagger.
+
+## Future Enhancements
+
+1. Improved complexity scoring for neat projects.
+2. Expanded support for additional architecture patterns.
+
+---
