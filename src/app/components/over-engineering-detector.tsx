@@ -27,8 +27,14 @@ type ProjectMetrics = {
   DesignPatterns: string[];
   ArchitectureLayers: number;
 };
+type MetricCardProps = {
+  title: string; // The title must be a string
+  value: number | string; // Value can be a number or string
+  icon: JSX.Element; // Icon must be a React JSX element
+  alert?: boolean; // Alert is optional and defaults to false
+};
 
-const MetricCard = ({ title, value, icon, alert = false }) => (
+const MetricCard: React.FC<MetricCardProps> = ({ title, value, icon, alert = false }) => (
   <div className={`p-4 ${alert ? 'bg-red-50' : 'bg-gray-50'} rounded-lg transition-colors`}>
     <div className="flex items-center gap-2 mb-2">
       {icon}
