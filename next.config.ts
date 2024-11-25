@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  env: {
-    API_URL: process.env.NEXT_PUBLIC_API_URL
+module.exports = {
+  output: 'export',
+  images: {
+    unoptimized: true, // GitHub Pages does not support image optimization
   },
-}
-
-module.exports = nextConfig
+};
