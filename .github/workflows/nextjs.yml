@@ -57,6 +57,9 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: Set Environment Variables
+        run: echo "NEXT_PUBLIC_API_URL=https://overengineered-fzgyfuf4eueea7bp.canadacentral-01.azurewebsites.net" >> $GITHUB_ENV
+
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
