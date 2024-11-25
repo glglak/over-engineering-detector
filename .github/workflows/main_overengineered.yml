@@ -1,4 +1,4 @@
-name: Build and Deploy ASP.Net Core app with React to Azure Web App - overengineered
+name: Build and Deploy ASP.Net Core app with React to Azure Web App and GitHub Pages
 
 on:
   push:
@@ -8,8 +8,6 @@ on:
 permissions:
   id-token: write
   contents: read
-  
-
 
 jobs:
   build:
@@ -25,64 +23,70 @@ jobs:
         with:
           node-version: '18'
 
-      # Step 3: Install dependencies
-      - name: Install Dependencies
+      # Step 3: Install dependencies for React/Next.js
+      - name: Install Dependencies for Frontend
         working-directory: .
         run: npm install
 
-      # Step 4: Run lint and auto-fix
-      - name: Lint and Fix
-        run: npm run lint -- --fix
-
-      # Step 5: Build React app
-      - name: Build React App
+      # Step 4: Build and Export React/Next.js App
+      - name: Build Frontend and Export
         working-directory: .
         run: |
           export NEXT_PUBLIC_ESLINT_DISABLE=true
           export NEXT_PUBLIC_DISABLE_TYPE_CHECKING=true
           npm run build
+          npm run export
 
-      # Step 6: Set up .NET Core
+      # Step 5: Deploy Frontend to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out # Path to exported static files
+
+      # Step 6: Set up .NET Core for Backend
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      # Step 7: Build .NET app
-      - name: Build and Publish .NET App
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      # Step 7: Build and Publish .NET Core App
+      - name: Build and Publish Backend
+        run: dotnet publish -c Release -o ./publish
 
-      # Step 8: Upload artifact for deployment
+      # Step 8: Upload .NET Backend Artifact for Deployment
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: dotnet-backend
+          path: ./publish
 
-  deploy:
+  deploy-backend:
     runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
     steps:
-      - name: Download artifact from build job
+      # Step 1: Download Backend Artifact
+      - name: Download Backend Artifact
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
-      
+          name: dotnet-backend
+
+      # Step 2: Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8B13C72BCA5D4B69AB88B4BDB6FF6AEF }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B467ACD660A04FC798E85B3FC5027D55 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_64DA73D354794DBF9D8DC65BB9BEC54E }}
-      - name: Deploy to Azure Web App
+
+      # Step 3: Deploy Backend to Azure App Service
+      - name: Deploy Backend to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'overengineered'
           slot-name: 'Production'
-          package: .
+          package: ./publish
