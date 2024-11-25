@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "3aGkaKSlE3HMno8viysCDs7mr0xsc9ONMjCzw7WCMDs=",
+  "Source": "OverEngineeringAnalyzer",
+  "BasePath": "_content/OverEngineeringAnalyzer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

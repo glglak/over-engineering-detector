@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OverEngineeringAnalyzer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+03bc8a645f2de43ebaad8eaf30f99cdd0b1c5065")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+269a26e98e7a99b8017d7dd090a25819aef2065a")]
 [assembly: System.Reflection.AssemblyProductAttribute("OverEngineeringAnalyzer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OverEngineeringAnalyzer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

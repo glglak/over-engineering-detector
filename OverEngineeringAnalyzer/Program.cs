@@ -69,15 +69,20 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "OverEngineeringAnalyzer", Version = "v1" });
     c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
+    
 });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI( c=> {
+  c.SwaggerEndpoint("/swagger/v1/swagger.json", "OverEngineeringAnalyzer API v1");
+    c.RoutePrefix = string.Empty; // Serve Swagger at root
+    }
+    );
 }
 
 app.UseHttpsRedirection();

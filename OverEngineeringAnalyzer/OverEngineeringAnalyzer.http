@@ -1,6 +1,0 @@
-@OverEngineeringAnalyzer_HostAddress = http://localhost:5019
-
-GET {{OverEngineeringAnalyzer_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
