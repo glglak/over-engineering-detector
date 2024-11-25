@@ -14,44 +14,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
-      - uses: actions/checkout@v4
-
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      # Step 3: Install dependencies for React/Next.js
-      - name: Install Dependencies for Frontend
-        working-directory: .
-        run: npm install
-
-      # Step 4: Build and Export React/Next.js App
-      - name: Build Frontend
-        working-directory: .
-        run: |
-          npm run build
-
-      # Step 5: Deploy Frontend to GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out # Path to exported static files
-
-      # Step 6: Set up .NET Core for Backend
+       
+      # Step 1: Set up .NET Core for Backend
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      # Step 7: Build and Publish .NET Core App
+      # Step 2: Build and Publish .NET Core App
       - name: Build and Publish Backend
         run: dotnet publish -c Release -o ./publish
 
-      # Step 8: Upload .NET Backend Artifact for Deployment
+      # Step 3: Upload .NET Backend Artifact for Deployment
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
