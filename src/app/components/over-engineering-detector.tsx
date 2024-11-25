@@ -11,7 +11,6 @@ import {
   Settings,
   Trophy,
   AlertTriangle,
-  ThumbsDown,
   Skull,
   CheckCircle ,
   Brain 
@@ -42,13 +41,13 @@ const MetricCard = ({ title, value, icon, alert = false }) => (
 const ProjectAnalyzer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [metrics, setMetrics] = useState<ProjectMetrics | null>(null);
-  const [directoryStructure, setDirectoryStructure] = useState<Record<string, any> | null>(null);
+  const [directoryStructure, setDirectoryStructure] = useState<Record<string, unknown> | null>(null);
   const [roastingMessage, setRoastingMessage] = useState<string | null>(null);
   const [roastingTip, setRoastingTip] = useState<string | null>(null);
 
   // Your existing directory scanning functions here
   const scanDirectory = async (directoryHandle: FileSystemDirectoryHandle) => {
-    const structure: Record<string, any> = {};
+    const structure: Record<string, unknown> = {};
     for await (const [name, handle] of directoryHandle.entries()) {
       if (
         handle.kind === "directory" &&
@@ -69,7 +68,7 @@ const ProjectAnalyzer = () => {
 
   const handleDirectorySelect = async () => {
     try {
-      // @ts-ignore: File System Access API is experimental
+      // @ts-expect-error: File System Access API is experimental
       const directoryHandle: FileSystemDirectoryHandle = await window.showDirectoryPicker();
       const projectStructure = await scanDirectory(directoryHandle);
       setDirectoryStructure(projectStructure);
@@ -78,7 +77,7 @@ const ProjectAnalyzer = () => {
     }
   };
 
-  const sendStructureToServer = async (structure: Record<string, any>) => {
+  const sendStructureToServer = async (structure: Record<string, unknown>) => {
     if (!structure) {
       alert("No directory structure available for analysis.");
       return;
@@ -162,7 +161,7 @@ const ProjectAnalyzer = () => {
       <div className="flex items-center gap-3">
         <Brain className="h-8 w-8 text-indigo-300" />
         <div>
-          <div className="text-indigo-300 text-sm font-medium">ARCHITECT'S TIP</div>
+          <div className="text-indigo-300 text-sm font-medium">ARCHITECT&apos;S Roast Line</div>
           <div className="text-xl font-bold italic">"{roastingTip}"</div>
         </div>
       </div>
