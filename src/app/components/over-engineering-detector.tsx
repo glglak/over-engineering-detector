@@ -51,6 +51,7 @@ const ProjectAnalyzer = () => {
   const [roastingMessage, setRoastingMessage] = useState<string | null>(null);
   const [roastingTip, setRoastingTip] = useState<string | null>(null);
   const [folderName, setFolderName] = useState<string | null>(null);
+  const [isCurrentlyScanning, setIsCurrentlyScanning] = useState(false);
 
   // Your existing directory scanning functions here
   const scanDirectory = async (directoryHandle: FileSystemDirectoryHandle) => {
@@ -84,8 +85,10 @@ const ProjectAnalyzer = () => {
     try {
       // @ts-expect-error: File System Access API is experimental
       const directoryHandle: FileSystemDirectoryHandle = await window.showDirectoryPicker();
+      setIsCurrentlyScanning(true);
       const projectStructure = await scanDirectory(directoryHandle);
       setDirectoryStructure(projectStructure);
+      setIsCurrentlyScanning(false);
       setFolderName(directoryHandle.name);
     } catch (error) {
       console.error("Error selecting directory:", error);
@@ -166,19 +169,28 @@ const ProjectAnalyzer = () => {
                 Analyze
                 </button>
               </div>
-              {directoryStructure && (
-              <><div className="mt-4 text-gray-600 text-left">
+                {directoryStructure && (
+                <>
+                  <div className="mt-4 text-gray-600 text-left">
                   <strong>Selected Directory:</strong> {folderName}
-                </div><button
+                  </div>
+                  <button
                   type="button"
                   onClick={clearDirectory}
                   className="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-                  disabled={isLoading}
-                >
-                    <AlertCircle className="h-4 w-4 mr-2" />
-                    Clear
-                  </button></>
-            )}
+                  disabled={isCurrentlyScanning}
+                  >
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  Clear
+                  </button>
+                </>
+                )}
+                {isCurrentlyScanning && (
+                <div className="flex items-center justify-center p-8 bg-white rounded-lg shadow-sm mb-6">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-3"></div>
+                  <p className="text-gray-600">Scanning directory...</p>
+                </div>
+                )}
             </div>
           </div>
 
