@@ -50,25 +50,33 @@ const ProjectAnalyzer = () => {
   const [directoryStructure, setDirectoryStructure] = useState<Record<string, unknown> | null>(null);
   const [roastingMessage, setRoastingMessage] = useState<string | null>(null);
   const [roastingTip, setRoastingTip] = useState<string | null>(null);
+  const [folderName, setFolderName] = useState<string | null>(null);
 
   // Your existing directory scanning functions here
   const scanDirectory = async (directoryHandle: FileSystemDirectoryHandle) => {
     const structure: Record<string, unknown> = {};
-    for await (const [name, handle] of directoryHandle.entries()) {
-      if (
-        handle.kind === "directory" &&
+    const entries = await directoryHandle.entries();
+    const promises = [];
+
+    for await (const [name, handle] of entries) {
+      if (handle.kind === "directory" &&
         name !== "test" &&
         name !== "bin" &&
         name !== ".git" &&
         name !== ".vs" &&
         name !== "obj" &&
-        name !== ".gitIgnore"
-      ) {
-        structure[name] = await scanDirectory(handle as FileSystemDirectoryHandle);
+        name !== ".gitIgnore") {
+        promises.push(
+          scanDirectory(handle as FileSystemDirectoryHandle).then((subStructure) => {
+            structure[name] = subStructure;
+          })
+        );
       } else if (handle.kind === "file") {
         structure[name] = "file";
       }
     }
+
+    await Promise.all(promises);
     return structure;
   };
 
@@ -78,6 +86,7 @@ const ProjectAnalyzer = () => {
       const directoryHandle: FileSystemDirectoryHandle = await window.showDirectoryPicker();
       const projectStructure = await scanDirectory(directoryHandle);
       setDirectoryStructure(projectStructure);
+      setFolderName(directoryHandle.name);
     } catch (error) {
       console.error("Error selecting directory:", error);
     }
@@ -101,7 +110,6 @@ const ProjectAnalyzer = () => {
       if (response.ok) {
         const rawData = await response.text();
         const data = JSON.parse(JSON.parse(rawData));
-        console.log(data);
         setRoastingMessage(data.roastingMessage || "No feedback provided.");
         setRoastingTip(data.roastingTip || null);
 
@@ -118,6 +126,14 @@ const ProjectAnalyzer = () => {
     }
   };
 
+  const clearDirectory = () => {
+    setDirectoryStructure(null);
+    setMetrics(null);
+    setRoastingMessage(null);
+    setRoastingTip(null);
+    setFolderName(null);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
@@ -132,24 +148,40 @@ const ProjectAnalyzer = () => {
               </div>
             </div>
             <div className="space-x-4">
-              <button
+              <div>
+                <button
                 onClick={handleDirectorySelect}
                 className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                 disabled={isLoading}
-              >
+                >
                 <FileSearch className="h-4 w-4 mr-2" />
                 Select Directory
-              </button>
-              <button
+                </button>
+                <button
                 onClick={() => directoryStructure && sendStructureToServer(directoryStructure)}
                 className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
                 disabled={isLoading || !directoryStructure}
-              >
+                >
                 <Code className="h-4 w-4 mr-2" />
                 Analyze
-              </button>
+                </button>
+              </div>
+              {directoryStructure && (
+              <><div className="mt-4 text-gray-600 text-left">
+                  <strong>Selected Directory:</strong> {folderName}
+                </div><button
+                  type="button"
+                  onClick={clearDirectory}
+                  className="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                  disabled={isLoading}
+                >
+                    <AlertCircle className="h-4 w-4 mr-2" />
+                    Clear
+                  </button></>
+            )}
             </div>
           </div>
+
         </div>
 
         {isLoading && (
